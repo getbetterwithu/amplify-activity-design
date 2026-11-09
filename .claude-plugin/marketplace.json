@@ -1,0 +1,11 @@
+{
+  "name": "amplify-activity-design",
+  "owner": { "name": "getbetterwithu" },
+  "plugins": [
+    {
+      "name": "amplify-activity-design",
+      "source": "./",
+      "description": "Amplify Classroom 액티비티 설계·편집기 조작 스킬"
+    }
+  ]
+}
