@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+  <title>색 프리셋 3종 비교</title>
+  <style>
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .preset { display: flex; flex-direction: column; gap: 10px; }
+    .name { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
+    .sub { font-size: 12px; color: var(--muted-foreground); margin-top: -6px; }
+    .paper { background: #ffffff; border-radius: var(--radius); padding: 14px 14px 12px; border: 1px solid var(--border); color: #212121; }
+    .chips { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 12px; }
+    .chip { height: 26px; border-radius: 6px; }
+    .roles { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; font-size: 9.5px; color: #616161; text-align: center; margin: -8px 0 12px; white-space: nowrap; letter-spacing: -0.04em; }
+    .memo { font-size: 14px; line-height: 1.7; }
+    .memo b { font-weight: 700; }
+    svg { display: block; width: 100%; height: 56px; margin-top: 8px; }
+  </style>
+</head>
+<body>
+  <div class="grid" id="g"></div>
+  <script>
+    const presets = [
+      { n: '① 기본형', s: 'Desmos 기본 색. 누구나 바로 맞출 수 있음',
+        g: ['rgb(96,66,166)','rgb(56,140,70)','rgb(250,126,25)','rgb(0,0,0)','rgb(45,112,179)','rgb(199,68,64)','rgb(158,158,158)'],
+        t: ['#6042a6','#2e7d32','#b35600','#000000','#2d70b3','#c74440','#616161'] },
+      { n: '② 차분형', s: '남색·청록·호박색. 교과서 지면처럼 차분함',
+        g: ['rgb(57,73,171)','rgb(0,137,123)','rgb(249,168,37)','rgb(38,50,56)','rgb(30,136,229)','rgb(229,57,53)','rgb(176,190,197)'],
+        t: ['#3949ab','#00695c','#9a6700','#263238','#1565c0','#c62828','#546e7a'] },
+      { n: '③ 색약 배려형', s: 'Okabe–Ito 배색. 빨강·초록 구별이 어려워도 구분됨',
+        g: ['rgb(0,114,178)','rgb(230,159,0)','rgb(204,121,167)','rgb(0,0,0)','rgb(0,158,115)','rgb(213,94,0)','rgb(153,153,153)'],
+        t: ['#0072b2','#9a6a00','#a8507f','#000000','#00795a','#b34f00','#666666'] },
+    ];
+    const roles = ['첫째','둘째','움직임','결과','반드시','절대로','배경'];
+    const g = document.getElementById('g');
+    for (const p of presets) {
+      const [A,B,M,R,S,N,G] = p.t; const gg = p.g;
+      const el = document.createElement('div'); el.className = 'preset';
+      el.innerHTML = `
+        <div class="name">${p.n}</div><div class="sub">${p.s}</div>
+        <div class="paper">
+          <div class="chips">${gg.map(c=>`<div class="chip" style="background:${c}"></div>`).join('')}</div>
+          <div class="roles">${roles.map(r=>`<div>${r}</div>`).join('')}</div>
+          <div class="memo">
+            <b style="color:${A}">사건 A</b>와 <b style="color:${B}">사건 B</b>의 확률을 비교하시오.<br>
+            <b style="color:${S}">반드시 일어나는 사건</b>의 확률은 1,
+            <b style="color:${N}">절대로 일어나지 않는 사건</b>의 확률은 0이다.<br>
+            <b style="color:${G}">나머지</b> · <b style="color:${M}">끌어서 움직이시오</b> · <b style="color:${R}">결과 0.3</b>
+          </div>
+          <svg viewBox="0 0 300 56" preserveAspectRatio="none">
+            <line x1="12" y1="30" x2="288" y2="30" stroke="${gg[6]}" stroke-width="2"/>
+            <line x1="12" y1="30" x2="95" y2="30" stroke="${gg[0]}" stroke-width="6" stroke-linecap="round"/>
+            <line x1="95" y1="30" x2="288" y2="30" stroke="${gg[1]}" stroke-width="6" stroke-linecap="round" opacity=".8"/>
+            <circle cx="12" cy="30" r="6" fill="${gg[5]}"/><circle cx="288" cy="30" r="6" fill="${gg[4]}"/>
+            <circle cx="95" cy="30" r="7" fill="#fff" stroke="${gg[2]}" stroke-width="3"/>
+            <text x="95" y="12" text-anchor="middle" font-size="11" fill="${gg[3]}">0.3</text>
+          </svg>
+        </div>`;
+      g.appendChild(el);
+    }
+  </script>
+</body>
+</html>
