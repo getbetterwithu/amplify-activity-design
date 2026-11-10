@@ -11,6 +11,8 @@ Amplify Classroom(Desmos) 액티비티를 설계하고 편집기에서 만드는
 - **CL 레시피:** 표·수식 답 판정과 ✅/❌ 표시, 단계 열기, 학생이 고른 답 인용, 조별 표 입력을 반 전체 그래프로 모으기
 - **색 프리셋:** 기본형 / 차분형 / 색약 배려형 견본을 보여 주고 골라 쓰기
 
+- **폴리패드 필기 작업지:** 자료 이미지와 실제 텍스트창을 분리하고, 필기용 도구 프리셋·자료 잠금·일부 글자 확대와 색을 설정하기
+
 ## 구성
 
 ```
@@ -18,6 +20,7 @@ skills/activity-design/SKILL.md                          스킬 본체 (원칙·
 skills/activity-design/reference/design-rules.md         화면 설계 규칙
 skills/activity-design/reference/screen-patterns.md      화면 구성 패턴
 skills/activity-design/reference/editor-ops.md           편집기 조작 절차와 저장값 확인
+skills/activity-design/reference/polypad-fullscreen-writing.md  전체화면 필기 프리셋·부분 서식
 skills/activity-design/reference/graph-cl-recipes.md     그래프 표현과 정답 판정 CL 레시피
 skills/activity-design/reference/recipe-aggregate.md     조별 표 입력 → 반 전체 집계 그래프
 skills/activity-design/reference/color-presets.md        색 역할표와 색 프리셋
@@ -52,7 +55,7 @@ CL 문법 해석은 이 스킬에 넣지 않았습니다. 수식 문법은 [ampl
 ## 알아 둘 점
 
 - 편집기 조작 절차는 Amplify 편집기의 내부 구조(클래스 이름 등)에 기대는 부분이 있습니다. Amplify가 바꾸면 동작하지 않을 수 있으니 항목의 확인 날짜를 보고 판단해 주세요.
-- Mac의 브라우저 AI 환경에서만 확인했습니다. Windows와 다른 계정에서는 확인하지 않았습니다.
+- 기존 절차는 주로 Mac에서 확인했고, 폴리패드 필기 작업지는 Windows에서도 구성·저장값·학생 미리보기를 확인했습니다. 다른 계정과 실제 학생 기기에서는 추가 검증이 필요합니다.
 - 반 전체 집계(여러 학생이 동시에 입력하는 경우)는 학생 1명 미리보기로만 확인했습니다.
 - 공식 Amplify 액티비티의 CL 원문이나 그래프 상태는 담지 않았습니다. 예시는 모두 직접 만든 액티비티에서 가져왔습니다.
 
