@@ -1,6 +1,6 @@
 {
   "name": "amplify-activity-design",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "license": "MIT",
   "description": "Amplify Classroom(Desmos) 액티비티 화면 설계와 편집기 조작을 돕는 스킬",
   "author": { "name": "getbetterwithu" },

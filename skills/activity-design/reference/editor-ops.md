@@ -12,7 +12,7 @@
 ## 1. 읽기·확인 (활동을 바꾸지 않는다)
 - 편집기에서 `window.__dc_resources.lessonQuery.listScreens({includeHiddenScreens:true})` → 화면 배열. 여기서 확인할 수 있는 것: 화면 순서, 각 화면의 `root.linearlayout` 구성요소 순서, 메모 doc(heading, color mark, `mq` 수식 노드), 교사 팁 `teacherTips["teacher-moves"]`, 객관식 `answerKey`, 그래프 `calculatorState`, CL `script`, 이미지 `allowFullscreen`. (확인됨)
 - 구성요소 키: `input/graph`, `exhibit/text`, `exhibit/image`, `input/text`, `input/expression`, `polypad`, `sketch`, `cardsort`, `multiple-choice`, `table`, `action-button`.
-- **수식 밖에 남은 글자 검사:** 메모 doc과 교사 팁(`teacherTips["teacher-moves"].content`)을 돌며 `mq` 노드는 건너뛰고, 나머지 text에 `\\`(LaTeX 원문)이나 영문·숫자가 있으면 목록으로 뽑는다. `mq` 노드 안의 text까지 검사하면 정상 수식도 걸리므로 반드시 건너뛴다. (확인됨)
+- **수식 밖에 남은 글자 검사:** 메모 doc과 교사 팁(`teacherTips["teacher-moves"].content`)을 돌며 `mq` 노드는 건너뛰고, 나머지 text에 `\\`(LaTeX 원문)이나 수식 꼴이 있으면 목록으로 뽑는다. `mq` 노드 안의 text까지 검사하면 정상 수식도 걸리므로 반드시 건너뛴다. 저장할 때마다 `lint.md`의 점검 스크립트로 돌리고 결과를 보여 준다. (확인됨)
 - **사용자가 고친 화면을 다시 만질 때는 먼저 저장값을 읽어 내가 넣은 값과의 차이(라벨 글자·크기·위치, 보기 범위, 배치, 문장)를 정리한다.** 그 값을 기준본으로 두고 되돌리지 않는다.
 
 ## 2. 화면
@@ -74,7 +74,7 @@
 - 선택지 글에도 수식(백틱)을 넣을 수 있다.
 
 ## 7. 이미지
-- **미디어 이미지:** `input[type=file][accept*="image/png"]`에 `setInputFiles`. 「이미지 설명:」에 대체 텍스트. 「…」 → 「테두리 표시」, **「전체 화면 허용」**(저장값 `allowFullscreen: true`, 미리보기에 확대 아이콘).
+- **미디어 이미지:** `input[type=file][accept*="image/png"]`에 `setInputFiles`. 「이미지 설명:」에 대체 텍스트. 「…」 → **「테두리 표시」**(저장값 `showBorder: true`, 주변 글과 구별되어야 하면 기본으로 켠다), **「전체 화면 허용」**(저장값 `allowFullscreen: true`, 미리보기에 확대 아이콘).
 - **그림판 배경:** 「배경」 → `input[type=file][accept="image/*"]`.
 - **Polypad 이미지 교체:** 사이드바 설정 → 「작성 모드」 켜기 → 기존 이미지 클릭 → 액션 바 4번째(삭제) → 툴바 「이미지 업로드」(filechooser) → 새 이미지 클릭 → 액션 바 5번째 → 너비 입력 → 「저작」에서 위치, 「상호 작용」에서 잠김 → 작성 모드 끄기.
 - **대표 이미지(썸네일):** 편집기 상단 제목 버튼(「액티비티 정보 편집」) → 정보 창 왼쪽 정사각형 칸 → 창 안의 `input[type=file][accept="image/*"]`에 `setInputFiles` → 「저장」. 같은 창에 과목·학년, 익명 동물 이름 체크, 공유 설정(링크/비공개), 액티비티 설명, Activity Style이 있다. **(1회 관찰)** 「취소」 → 「Unsaved Changes」 → 확인으로 버려도 업로드한 이미지는 남아 있었다.
@@ -119,8 +119,18 @@
 - 「완료」는 `button`이 아니라 `span`이다. DOM `click()`이 안 먹을 때가 있어 좌표 마우스 클릭으로 누른다. `setValue` 뒤 키 입력을 한 번(공백 입력 후 지우기) 해야 변경이 저장되었다.
 
 ## 9-2. 화면을 JSON으로 붙이기 (확인됨)
+- **JSON 붙이기는 UI로 만들 수 있는 구성을 빠르게 옮기는 수단이다.** UI에 없는 종류나 설정(칸 안의 그래핑 계산기 등)을 만드는 데 쓰지 않는다.
 - 화면 복사는 클립보드에 `vnd.desmos.ab.screen` 형식(`{version:3, stepConfig:{version:1, steps:[화면]}}`)으로 들어간다. 합성 paste 이벤트는 무시되므로, `DataTransfer.prototype.setData`를 가로채 실제 Meta+C 때 내용을 바꿔 넣고 Meta+V로 붙인다. Meta+C는 포커스가 `body`일 때만 화면 복사가 된다.
 - 붙는 자리는 **선택된 화면 다음**이다. 썸네일을 눌러도 선택이 안 바뀔 때가 있으니(화면이 엉뚱한 자리에 붙을 수 있다) `location.hash`로 선택을 확인한 뒤 붙인다.
+- **JSON으로 화면을 만들 때 메모 글의 모양(수식은 반드시 수식 노드로):** 메모 구성요소(`exhibit/text`)의 `doc`은 문자열로 된 JSON이다. 문단 안에서 수식은 `type: "mq"` 노드이고, 그 안에 LaTeX 한 덩어리를 text로 넣는다. 일반 글자는 `type: "text"` 노드다. (확인됨)
+  ```
+  {"type":"doc","content":[{"type":"paragraph","attrs":{"alignment":"left","indent":0},"content":[
+    {"type":"mq","content":[{"type":"text","text":"y=ax^{2}"}]},
+    {"type":"text","text":"의 그래프가 아래로 볼록하게 하는 "},
+    {"type":"mq","content":[{"type":"text","text":"a"}]},
+    {"type":"text","text":"의 값을 고르시오."}]}]}
+  ```
+  큰 글자는 문단 대신 `{"type":"heading","attrs":{"level":2,"alignment":"left","fontWeight":null},"content":[…]}`, 굵게와 글자색은 text 노드의 `marks`(`{"type":"strong"}`, `{"type":"color","attrs":{"hex":"…"}}`)로 넣는다. (1회 관찰) 수식을 일반 text 노드에 `y=ax^2`처럼 쓰면 수식으로 그려지지 않는다. 객관식 선택지는 문자열 안에 백틱(`` `a=1` ``)으로 감싼다.
 - **제출칸(자유 답변·수식 답변)은 화면 JSON 붙여넣기로 만들지 않는다.** 저장값이 같아도 JSON으로 붙인 칸은 제출 버튼이 비활성으로 남을 수 있다(원인 미확인). 「자유 답변」·「수식 답변」 추가 버튼(UI)이나 「구성 요소 복사」로 만든 칸은 제출이 켜진다. 제출칸이 있는 화면은 구성요소를 UI로 추가한다. (1회 관찰)
 - 화면을 통째로 바꿔 끼우면 화면 id가 바뀐다. 바꾸기 직전에 저장값을 다시 읽어, 그 사이 사용자가 고친 것이 있으면 그것을 바탕으로 만든다(절대 원칙).
 - 동시에 두 탭에서 같은 액티비티를 편집하면 한쪽은 저장이 꺼진다(「다른 창에서 편집 중」 경고). 사용자가 편집 중이면 새로고침으로 편집권을 빼앗지 말고 멈춘다.
