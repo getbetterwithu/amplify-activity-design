@@ -28,6 +28,15 @@ a1 = f.evaluateAt(0.3)
 a2 = f.evaluateAt(0.9)
 ok = a1 > 0.6999 and a1 < 0.7001 and a2 > 0.0999 and a2 < 0.1001
 ```
+- **방정식 칸(축의 방정식 등)과 좌표 칸 판정(1회 관찰):**
+```
+f = parseEquation(this.cellContent(1,2)).differenceFunction("x","y")
+ax = f.evaluateAt(0,0) = 0 and f.evaluateAt(0,7) = 0 and not(f.evaluateAt(1,0) = 0)     # x=0
+p = parseOrderedPair(this.cellContent(1,3))
+vx = numericValue(p.x) = 0 and numericValue(p.y) = -3                                  # (0,-3)
+```
+  - `parseOrderedPair(...).x`는 latex라 `numericValue()`로 감싸야 한다. 감싸지 않으면 「Objects of different types are never equal」 오류.
+  - 학생이 쓴 식(`y=…`)을 그래프에 그리려면 그래프 CL에 `function("g"): parseEquation(eq.latex).differenceFunction("x","y")`, 그래프 식은 `0=g(x,y)`(`editor-ops.md` 8절). `initialLatex: "y="`를 쓰면 `suffix`에서 `this.latex = "y="`일 때 빈칸으로 처리한다.
 - 자리 표시(`placeholderLatex`)에 답을 쓰지 않는다.
 
 ## 3. 단계 열기 (확인됨)
@@ -113,3 +122,29 @@ m_v = {L = 시작값: {R = 시작값: 0, 1}, 1}                           (움�
 ## 15. 색 변수 (확인됨)
 - `c_A = rgb(96,66,166)`처럼 색 변수를 「팔레트」 폴더에 두고, 식의 색을 그 변수로 지정한다(`colorLatex`). 변수 한 줄만 바꾸면 그 색을 쓰는 식이 모두 바뀐다. `hsv(h,…)`처럼 숫자 변수로 색을 만들 수도 있다. 프리셋은 `color-presets.md`.
 - CL `number()`로 색을 만드는 숫자 변수를 바꾸는 방법은 확인하지 못했다. (미확인)
+
+## 16. 끌기 화면의 피드백 (확인 버튼 판정은 1회 관찰)
+- **피드백은 그래프 안의 `pointLabel`로 학생이 끄는 점 옆에 준다.** 다른 구성요소에 돌려 쓰지 않는다. 학생이 보고 있는 점 바로 옆에 나와서 가장 잘 보인다.
+- 표 칸처럼 ✅/❌만 붙이지 않는다. 그 조작의 목적이 이루어졌다는 것을 상황의 말로 쓴다. 예: 「빨간 차가 먼저 도착했습니다」. 탐색하는 화면이면 판정 대신 지금 상태를 알려 준다. 예: 「빨간 차가 2분 늦게 도착합니다」. 정답 위치를 알려 주는 문장은 쓰지 않는다(`design-rules.md` 2-2절).
+- 따옴표 안 이름은 그래프의 점 이름(라벨)과 같아야 한다(`geometry-recipes.md`의 교점 라벨과 같은 방식). 점의 라벨 표시를 켜 둔다.
+```
+ok = (판정 식)
+pointLabel("P"): when ok "빨간 차가 먼저 도착했습니다" otherwise ""
+```
+- **얻어걸리기를 막는다.** 끄는 동안 판정이 실시간으로 바뀌면 학생이 생각 없이 움직이다 맞는 자리에서 멈춘다. 정답을 판정하는 화면은 행동 버튼(「확인하기」)을 눌렀을 때 `capture`로 점 위치를 기록하고 그 값으로 판정한다. 확인한 뒤 점을 다시 움직이면 「위치가 바뀌었습니다. 다시 확인해 보세요」로 바꾼다. 정답이 하나뿐인 화면은 버튼 `disabled`로 시도 횟수를 제한할 수 있다(상황 만들기처럼 답이 여럿인 화면에는 제한하지 않는다). 맞힌 뒤에는 이유 쓰기 칸을 연다. 확인 횟수를 `exportNumber`로 내보내면 교사가 마구잡이 조작을 볼 수 있다.
+- **확인 버튼 판정(1회 관찰, 학생 미리보기 실제 마우스):**
+```
+# 버튼(chk)의 스크립트
+label: "확인하기"
+capture("a1"): g.number("a_1")        (점마다 한 줄)
+# 그래프(g)의 스크립트
+number("n_p"): chk.pressCount
+number("k_1"): chk.lastValue("a1")    (점마다 한 줄)
+# 그래프 안
+K = [k_1, …], A = [a_1, …], T = [정답, …]
+c_k = {n_p>0: {total(|K−T|)=0: 1, 0}, 0}          (판정)
+m_v = {n_p>0: {total(|K−A|)>0: 1, 0}, 0}          (확인 뒤 움직였는가)
+o = {c_k=1: {m_v=0: 1, 0}, 0}                     (다음 단계 열기에 씀)
+```
+  - 그래프의 `k_N` 기본값은 `\frac{0}{0}`(정의되지 않음)으로 둔다. 버튼을 누르기 전 `lastValue`가 무엇을 돌려주는지는 확인하지 못해 `n_p>0` 조건으로 막는다.
+  - 라벨 문장: 틀림 「아직 맞지 않는 점이 있습니다」(어느 점인지 알려 주지 않음), 확인 뒤 이동 「위치가 바뀌었습니다. 다시 확인해 보세요」, 정답은 상황의 말로.

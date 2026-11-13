@@ -1,60 +1,63 @@
 <!doctype html>
 <html>
 <head>
-  <title>색 프리셋 3종 비교</title>
+  <title>색 프리셋 3종 비교 (일반 + 색약형)</title>
   <style>
-    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
     .preset { display: flex; flex-direction: column; gap: 10px; }
     .name { font-size: 16px; font-weight: 600; letter-spacing: -0.01em; }
-    .sub { font-size: 12px; color: var(--muted-foreground); margin-top: -6px; }
-    .paper { background: #ffffff; border-radius: var(--radius); padding: 14px 14px 12px; border: 1px solid var(--border); color: #212121; }
-    .chips { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 12px; }
-    .chip { height: 26px; border-radius: 6px; }
-    .roles { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; font-size: 9.5px; color: #616161; text-align: center; margin: -8px 0 12px; white-space: nowrap; letter-spacing: -0.04em; }
-    .memo { font-size: 14px; line-height: 1.7; }
+    .sub { font-size: 12px; color: var(--muted-foreground, #666); margin-top: -6px; }
+    .paper { background: #ffffff; border-radius: var(--radius, 10px); padding: 14px 14px 12px; border: 1px solid var(--border, #e0e0e0); color: #212121; }
+    .label { font-size: 11px; font-weight: 600; color: #555; margin: 6px 0 4px; }
+    .chips { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-bottom: 6px; }
+    .chip { height: 22px; border-radius: 5px; }
+    .roles { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; font-size: 9.5px; color: #616161; text-align: center; margin: -2px 0 10px; white-space: nowrap; letter-spacing: -0.04em; }
+    .memo { font-size: 13px; line-height: 1.6; margin-bottom: 8px; }
     .memo b { font-weight: 700; }
-    svg { display: block; width: 100%; height: 56px; margin-top: 8px; }
+    hr { border: 0; border-top: 1px solid #eee; margin: 10px 0; }
   </style>
 </head>
 <body>
   <div class="grid" id="g"></div>
   <script>
     const presets = [
-      { n: '① 기본형', s: 'Desmos 기본 색. 누구나 바로 맞출 수 있음',
+      { n: '① 클래식', s: 'Desmos 기본 6색 + 회색',
         g: ['rgb(96,66,166)','rgb(56,140,70)','rgb(250,126,25)','rgb(0,0,0)','rgb(45,112,179)','rgb(199,68,64)','rgb(158,158,158)'],
-        t: ['#6042a6','#2e7d32','#b35600','#000000','#2d70b3','#c74440','#616161'] },
-      { n: '② 차분형', s: '남색·청록·호박색. 교과서 지면처럼 차분함',
-        g: ['rgb(57,73,171)','rgb(0,137,123)','rgb(249,168,37)','rgb(38,50,56)','rgb(30,136,229)','rgb(229,57,53)','rgb(176,190,197)'],
-        t: ['#3949ab','#00695c','#9a6700','#263238','#1565c0','#c62828','#546e7a'] },
-      { n: '③ 색약 배려형', s: 'Okabe–Ito 배색. 빨강·초록 구별이 어려워도 구분됨',
-        g: ['rgb(0,114,178)','rgb(230,159,0)','rgb(204,121,167)','rgb(0,0,0)','rgb(0,158,115)','rgb(213,94,0)','rgb(153,153,153)'],
-        t: ['#0072b2','#9a6a00','#a8507f','#000000','#00795a','#b34f00','#666666'] },
+        t: ['#6042a6','#2e7d32','#b35600','#000000','#2d70b3','#c74440','#616161'],
+        cn: '① 색약형 (Okabe–Ito)',
+        cg: ['rgb(0,114,178)','rgb(230,159,0)','rgb(204,121,167)','rgb(0,0,0)','rgb(0,158,115)','rgb(213,94,0)','rgb(153,153,153)'],
+        ct: ['#0072b2','#996a00','#bb4d8a','#000000','#008460','#bb5300','#757575'] },
+      { n: '② 어스', s: '테라코타·올리브·머스터드·슬레이트·버건디',
+        g: ['rgb(200,85,61)','rgb(125,143,58)','rgb(224,165,38)','rgb(59,47,42)','rgb(63,127,168)','rgb(122,31,69)','rgb(168,161,150)'],
+        t: ['#c35037','#6a7931','#956c15','#3b2f2a','#3c79a1','#7a1f45','#7c7366'],
+        cn: '② 색약형 (Paul Tol muted)',
+        cg: ['rgb(51,34,136)','rgb(68,170,153)','rgb(221,204,119)','rgb(43,43,43)','rgb(136,204,238)','rgb(136,34,85)','rgb(153,153,153)'],
+        ct: ['#332288','#337e72','#857521','#2b2b2b','#187aab','#882255','#757575'] },
+      { n: '③ 비비드 팝', s: '마젠타·시안·바이올렛 (고대비)',
+        g: ['rgb(181,23,158)','rgb(0,119,182)','rgb(94,23,235)','rgb(20,20,31)','rgb(0,127,95)','rgb(217,4,41)','rgb(92,103,125)'],
+        t: ['#b5179e','#0077b6','#5e17eb','#14141f','#007f5f','#d90429','#5c677d'],
+        cn: '③ 색약형 (IBM Design)',
+        cg: ['rgb(220,38,127)','rgb(120,94,240)','rgb(255,176,0)','rgb(20,20,31)','rgb(100,143,255)','rgb(254,97,0)','rgb(138,138,138)'],
+        ct: ['#da237c','#7459f0','#996a00','#14141f','#2c66ff','#c64c00','#737373'] },
     ];
     const roles = ['첫째','둘째','움직임','결과','반드시','절대로','배경'];
     const g = document.getElementById('g');
+    const row = (label, gg, tt) => {
+      const [A,B,M,R,S,N,G] = tt;
+      return `
+        <div class="label">${label}</div>
+        <div class="chips">${gg.map(c=>`<div class="chip" style="background:${c}"></div>`).join('')}</div>
+        <div class="roles">${roles.map(r=>`<div>${r}</div>`).join('')}</div>
+        <div class="memo">
+          <b style="color:${A}">대상 A</b>·<b style="color:${B}">대상 B</b>, <b style="color:${M}">움직임</b>, <b style="color:${R}">결과</b>
+          (<b style="color:${S}">맞음</b> / <b style="color:${N}">틀림</b>)
+        </div>`;
+    };
     for (const p of presets) {
-      const [A,B,M,R,S,N,G] = p.t; const gg = p.g;
       const el = document.createElement('div'); el.className = 'preset';
       el.innerHTML = `
         <div class="name">${p.n}</div><div class="sub">${p.s}</div>
-        <div class="paper">
-          <div class="chips">${gg.map(c=>`<div class="chip" style="background:${c}"></div>`).join('')}</div>
-          <div class="roles">${roles.map(r=>`<div>${r}</div>`).join('')}</div>
-          <div class="memo">
-            <b style="color:${A}">사건 A</b>와 <b style="color:${B}">사건 B</b>의 확률을 비교하시오.<br>
-            <b style="color:${S}">반드시 일어나는 사건</b>의 확률은 1,
-            <b style="color:${N}">절대로 일어나지 않는 사건</b>의 확률은 0이다.<br>
-            <b style="color:${G}">나머지</b> · <b style="color:${M}">끌어서 움직이시오</b> · <b style="color:${R}">결과 0.3</b>
-          </div>
-          <svg viewBox="0 0 300 56" preserveAspectRatio="none">
-            <line x1="12" y1="30" x2="288" y2="30" stroke="${gg[6]}" stroke-width="2"/>
-            <line x1="12" y1="30" x2="95" y2="30" stroke="${gg[0]}" stroke-width="6" stroke-linecap="round"/>
-            <line x1="95" y1="30" x2="288" y2="30" stroke="${gg[1]}" stroke-width="6" stroke-linecap="round" opacity=".8"/>
-            <circle cx="12" cy="30" r="6" fill="${gg[5]}"/><circle cx="288" cy="30" r="6" fill="${gg[4]}"/>
-            <circle cx="95" cy="30" r="7" fill="#fff" stroke="${gg[2]}" stroke-width="3"/>
-            <text x="95" y="12" text-anchor="middle" font-size="11" fill="${gg[3]}">0.3</text>
-          </svg>
-        </div>`;
+        <div class="paper">${row('일반', p.g, p.t)}<hr>${row(p.cn, p.cg, p.ct)}</div>`;
       g.appendChild(el);
     }
   </script>

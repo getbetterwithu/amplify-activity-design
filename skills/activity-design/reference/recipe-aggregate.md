@@ -45,7 +45,7 @@ T=total(A)  S=total(B)  Q=S/T  R=round(Q,3)
 | `numericValue("…${m}")` | 문자열 속 `${}` 보간으로 계산 | (확인됨) |
 | `readOnly: true` | 학생이 그래프를 조작하지 못하게 함 | (확인됨) |
 
-CL 문법은 `cl-interpreter` 스킬로 확인한다.
+CL 문법은 `../knowledge/`의 `cl-sinks.md`·`cl-judgments.md`·`cl-pitfalls.md`로 확인한다.
 
 ## 학생 숫자 하나를 점도표로 모으고 보기 범위가 따라가게 하기
 학생마다 숫자 하나(시간, 개수 등)를 입력하면 반 전체 값이 한 점도표에 모이고, 엉뚱하게 큰 값이 나와도 점이 화면 밖으로 나가지 않게 보기 범위가 자동으로 넓어지는 화면이다. 위 조별 표 레시피보다 단순하다.
